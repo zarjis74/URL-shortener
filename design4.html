@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="stylesheet" type="text/css" href="style.css">
+  
+		
+	<title>URL Shortening Service </title>
+<head>
+ 
+<body>
+	<center>
+
+		<h1>URL Shortening Service</h1>
+		<form method="POST"  action="index.php">
+		 <input type="text" name="urlshort" size="70"  placeholder="Enter link..." > <br><br>
+		<input type="submit" name="submit" style="color: black">
+		<body style="background-color:coral;">
+        
+		<style>
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 10%;
+    background-color: black;
+   
+    color: white;
+    text-align: center;
+}
+</style>
+
+<div class="footer">
+  <p> About   |  Blog   |  Support  |  Contact  |  Developers  |  Privacy  |  Policy  |  Terms Of Service </p>
+  
+
+</div>
+
+<?php
+if (isset($_POST["submit"])){
+  $conn = mysqli_connect('localhost','zarjis','123456','url');
+  $longurl = $_POST ["urlshort"];
+  $shorturl = substr(md5( microtime()), rand(0,26),5);
+  $query = "INSERT INTO shorturl (shorturl,longurl) VALUES ('$shorturl','$longurl')";
+  $result = mysqli_query($conn,$query);
+  if ($result) {
+    echo "Your Short Url Link is ::  http://localhost/url/$shorturl ";
+  }
+  else{
+    echo "We are facing some problems";
+  }
+}
+
+if (isset($_GET["link"])) {
+  $conn = mysqli_connect('localhost','zarjis','123456','url');
+  $link = $_GET["link"];
+  $fetchquery = "SELECT * FROM shorturl WHERE shorturl= '$link'";
+while ($row = mysqli_fetch_assoc($fetchresult)) {
+    $visitlongurl = $row ["longurl"];
+    header ("Location: $visitlongurl");
+    exit();
+  }
+}
+?>
